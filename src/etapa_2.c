@@ -36,6 +36,7 @@ int main(int argc, char const *argv[]){
 
     if(!verificacao){
         fprintf(stderr, "Falha ao abrir o arquivo.\n");
+        desalocar_matriz(matriz, tamanho_labirinto);
         exit(EXIT_FAILURE);
     }
     
