@@ -6,7 +6,7 @@
 #include <stdbool.h>
 #include "includes/resolvedor_de_labirinto.h"
 
-// Organizei todas as funções no arquivo resolvedor_de_labirinto, localizado na pasta includes, junto das outras estrututas.
+// G: Organizei todas as funções no arquivo resolvedor_de_labirinto, localizado na pasta includes, junto das outras estrututas.
 
 int main(int argc, char const *argv[]){
 
@@ -41,9 +41,7 @@ int main(int argc, char const *argv[]){
 
     // Etapa 3.
 
-    mostrar_figura_a(matriz, tamanho_labirinto); // F2a.txt
-
-    verificacao = gerar_figura_a(matriz, tamanho_labirinto); // F2b.txt
+    verificacao = mostrar_labirinto_como_caracteres("F2a.txt", matriz, tamanho_labirinto); // F2b.txt
     if(!verificacao){
         fprintf(stderr, "Falha ao criar o arquivo F3a.txt.\n");
         desalocar_matriz(matriz, tamanho_labirinto);
@@ -52,9 +50,7 @@ int main(int argc, char const *argv[]){
 
     printf("\n\n");
     
-    mostrar_figura_b(matriz, tamanho_labirinto); // F2b.txt
-
-    verificacao = gerar_figura_b(matriz, tamanho_labirinto); // F2b.txt
+    verificacao = mostrar_labirinto_como_numeros("F2b.txt", matriz, tamanho_labirinto); // F2b.txt
     if(!verificacao){
         fprintf(stderr, "Falha ao criar o arquivo F3b.txt.\n");
         desalocar_matriz(matriz, tamanho_labirinto);
@@ -70,13 +66,13 @@ int main(int argc, char const *argv[]){
         exit(EXIT_FAILURE);
     }
 
+
     anotar_labirinto(matriz, tamanho_labirinto, entrada, saida);
+
 
     printf("\n\n");
     
-    mostrar_figura_c(matriz, tamanho_labirinto); // F2c.txt
-
-    verificacao = gerar_figura_c(matriz, tamanho_labirinto); // F2c.txt
+    verificacao = mostrar_labirinto_como_numeros("F2c.txt", matriz, tamanho_labirinto); // F2c.txt
     if(!verificacao){
         fprintf(stderr, "Falha ao criar o arquivo F3b.txt.\n");
         desalocar_matriz(matriz, tamanho_labirinto);

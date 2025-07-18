@@ -36,6 +36,7 @@ bool ajustar_matriz(char* nome_arquivo, int** matriz, unsigned tamanho){
 }
 
 void anotar_labirinto(int** matriz, unsigned tamanho, Par* entrada, Par* saida){
+
     fila_encadeada* fila = fe_inicializar();
 
     int x_entrada = par_primeiro(entrada),
@@ -116,10 +117,15 @@ Par* encontrar_entrada(int** matriz, unsigned tamanho){
             }
 
     int dx[] = {-1, 1, 0, 0};
+    int dy[] = {0, 0, -1, 1};
+
     for(int d = 0; d < 4; ++d){
         int x = x_entrada + dx[d];
-        if(x >= 0 && x < tamanho && matriz[x][y_entrada] == 0){
+        int y = y_entrada + dy[d];
+
+        if(x >= 0 && x < tamanho && y >= 0 && y < tamanho && matriz[x][y] == 0){
             x_entrada = x;
+            y_entrada = y;
             break;
         }
     }
@@ -137,10 +143,15 @@ Par* encontrar_saida(int** matriz, unsigned tamanho){
                 y_saida = j;
             }
 
+    int dx[] = {-1, 1, 0, 0};
     int dy[] = {0, 0, -1, 1};
+
     for(int d = 0; d < 4; ++d){
+        int x = x_saida + dx[d];
         int y = y_saida + dy[d];
-        if(y >= 0 && y < tamanho && matriz[x_saida][y] == 0){
+
+        if(x >= 0 && x < tamanho && y >= 0 && y < tamanho && matriz[x][y] == 0){
+            x_saida = x;
             y_saida = y;
             break;
         }
@@ -149,79 +160,53 @@ Par* encontrar_saida(int** matriz, unsigned tamanho){
     return par_inicializar(x_saida, y_saida);
 }
 
-bool gerar_figura_a(int** matriz, unsigned tamanho){
-    FILE* file = fopen("F2a.txt", "w");
+bool mostrar_labirinto_como_caracteres(char* nome_arquivo, int** matriz, unsigned tamanho){
+    FILE* file = fopen(nome_arquivo, "w");
     if(!file) return false;
 
-    for(int i = 0; i < tamanho; i++){
-        for(int j = 0; j < tamanho; j++){
-            switch(matriz[i][j]){
-                case 0: fprintf(file, "\t%5c", ' '); break;
-                case -1: fprintf(file, "\t%5c", '#'); break;
-                case -2: fprintf(file, "\t%5c", '<'); break;
-                case -3: fprintf(file, "\t%5c", '>'); break;
-            }
-        }
-        fprintf(file, "\n\n");
-    }
-    fclose(file);
-    return true;
-}
-
-bool gerar_figura_b(int** matriz, unsigned tamanho){
-    FILE* file = fopen("F2b.txt", "w");
-    if(!file) return false;
-    for(int i = 0; i < tamanho; i++){
-        for(int j = 0; j < tamanho; j++){
-            fprintf(file, "\t%5d", matriz[i][j]);
-        }
-        fprintf(file, "\n\n");
-    }
-    fclose(file);
-    return true;
-}
-
-bool gerar_figura_c(int** matriz, unsigned tamanho){
-    FILE* file = fopen("F2c.txt", "w");
-    if(!file) return false;
-    for(int i = 0; i < tamanho; i++){
-        for(int j = 0; j < tamanho; j++){
-            fprintf(file, "\t%5d", matriz[i][j]);
-        }
-        fprintf(file, "\n\n");
-    }
-    fclose(file);
-    return true;
-}
-
-void mostrar_figura_a(int** matriz, unsigned tamanho){
     for(int i = 0; i < tamanho; ++i){
         for(int j = 0; j < tamanho; ++j){
             switch(matriz[i][j]){
-                case 0: printf("\t%5c", ' '); break;
-                case -1: printf("\t%5c", '#'); break;
-                case -2: printf("\t%5c", '<'); break;
-                case -3: printf("\t%5c", '>'); break;
+                case 0: 
+                    printf("%3c ", ' '); 
+                    fprintf(file, "%3c ", ' '); 
+                    break;
+                case -1: 
+                    printf("%3c ", '#'); 
+                    fprintf(file, "%3c ", '#'); 
+                    break;
+                case -2: 
+                    printf("%3c ", '<'); 
+                    fprintf(file, "%3c ", '<'); 
+                    break;
+                case -3: 
+                    printf("%3c ", '>'); 
+                    fprintf(file, "%3c ", '>'); 
+                    break;
             }
         }
         printf("\n\n");
+        fprintf(file, "\n\n");
     }
+
+    fclose(file);
+    return true;
 }
 
-void mostrar_figura_b(int** matriz, unsigned tamanho){
-    for(int i = 0; i < tamanho; ++i){
-        for(int j = 0; j < tamanho; ++j)
-            printf("\t%5d", matriz[i][j]);
-        printf("\n\n");
-    }
-}
+bool mostrar_labirinto_como_numeros(char* nome_arquivo, int** matriz, unsigned tamanho){
+    FILE* file = fopen(nome_arquivo, "w");
+    if(!file) return false;
 
-void mostrar_figura_c(int** matriz, unsigned tamanho){
     for(int i = 0; i < tamanho; ++i){
-        for(int j = 0; j < tamanho; ++j)
-            printf("\t%5d", matriz[i][j]);
+        for(int j = 0; j < tamanho; ++j){
+            printf("%3d ", matriz[i][j]);
+            fprintf(file, "%3d ", matriz[i][j]);
+        }
         printf("\n\n");
+        fprintf(file, "\n\n");
     }
+
+    return true;
 }
 
 unsigned verificar_labirinto(char* nome_arquivo){
