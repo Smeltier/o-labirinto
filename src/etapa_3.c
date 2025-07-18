@@ -6,7 +6,9 @@
 #include <stdbool.h>
 #include "includes/resolvedor_de_labirinto.h"
 
-// G: Organizei todas as funções no arquivo resolvedor_de_labirinto, localizado na pasta includes, junto das outras estrututas.
+// G: Organizei todas as funções no arquivo "resolvedor_de_labirinto", localizado na pasta "includes", junto com as outras estruturas.
+// G: Aparentemente, não há problema em imprimir na tela ou no arquivo com espaços entre os elementos. Fiz isso para facilitar a leitura.
+// G: Para labirintos grandes, a visualização no terminal fica ruim. Recomendo visualizar pelo arquivo gerado.
 
 int main(int argc, char const *argv[]){
 
