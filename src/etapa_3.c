@@ -14,6 +14,8 @@ int main(int argc, char const *argv[]){
 
     bool verificacao;
 
+    printf("\nDigite o nome do arquivo que deseja validar, traduzir e resolver: ");
+
     char nome_arquivo[101];
     scanf(" %[^\n]", nome_arquivo);    
 
