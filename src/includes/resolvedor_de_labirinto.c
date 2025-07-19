@@ -106,6 +106,34 @@ void desalocar_matriz(int** matriz, unsigned n){
     free(matriz);
 }
 
+void marcar_caminho(int** matriz, unsigned tamanho, pilha_encadeada* caminho){
+    pilha_encadeada* pilha_auxiliar = pe_inicializar();
+
+    while(!pe_vazia(caminho)){
+        Par* topo = pe_topo(caminho);
+
+        int i = par_primeiro(topo),
+            j = par_segundo(topo);
+
+        pe_inserir(pilha_auxiliar, i, j);
+        pe_remover(caminho);
+
+        matriz[i][j] = -4;
+    }
+
+    while(!pe_vazia(pilha_auxiliar)){
+        Par* topo = pe_topo(pilha_auxiliar);
+
+        int i = par_primeiro(topo),
+            j = par_segundo(topo);
+
+        pe_inserir(caminho, i, j);
+        pe_remover(pilha_auxiliar);
+    }
+
+    pe_liberar(&pilha_auxiliar);
+}
+
 Par* encontrar_entrada(int** matriz, unsigned tamanho){
     int x_entrada,
         y_entrada;
@@ -160,6 +188,100 @@ Par* encontrar_saida(int** matriz, unsigned tamanho){
     return par_inicializar(x_saida, y_saida);
 }
 
+bool extrair_caminho(int** matriz, unsigned tamanho, Par* entrada, Par* saida, pilha_encadeada* caminho){
+
+    int x_entrada = par_primeiro(entrada),
+        y_entrada = par_segundo(entrada),
+        x_saida = par_primeiro(saida),
+        y_saida = par_segundo(saida);
+
+    if(matriz[x_saida][y_saida] == -1 || matriz[x_saida][y_saida] == 0)
+        return false;
+    
+    pe_inserir(caminho, x_saida, y_saida);
+
+    int dx[] = {-1, 1, 0, 0},
+        dy[] = {0, 0, -1, 1};        
+
+    while(true){
+        Par* topo = pe_topo(caminho);
+
+        int i = par_primeiro(topo),
+            j = par_segundo(topo);
+
+        if(i == x_entrada && j == y_entrada)
+            break;
+
+        int passo_atual = matriz[i][j];
+
+        for(int d = 0; d < 4; ++d){
+            int x = i + dx[d],
+                y = j + dy[d];
+
+            if(x >= 0 && x < tamanho && y >= 0 && y < tamanho && matriz[x][y] == passo_atual - 1){
+                pe_inserir(caminho, x, y);
+                break;
+            }
+        }
+    }
+
+    return true;
+}
+
+bool mostrar_animacao(int** matriz, unsigned tamanho, pilha_encadeada* caminho){
+    int** animacao = alocar_matriz(tamanho);
+    if(!animacao)
+        return false;
+
+    for(int i = 0; i < tamanho; ++i)
+        for(int j = 0; j < tamanho; ++j)
+            if(matriz[i][j] == -4) animacao[i][j] = 0;
+            else animacao[i][j] = matriz[i][j];
+
+    while(!pe_vazia(caminho)){
+        Par* topo = pe_topo(caminho);
+
+        int i = par_primeiro(topo),
+            j = par_segundo(topo);
+
+        pe_remover(caminho);
+
+        animacao[i][j] = -4;
+
+        system(CLEAR_COMMAND);
+        mostrar_labirinto_estilizado(animacao, tamanho);
+        SLEEP(200);
+    }
+    
+    desalocar_matriz(animacao, tamanho);
+    return true;
+}
+
+void mostrar_labirinto_estilizado(int** matriz, unsigned tamanho){
+    for(int i = 0; i < tamanho; ++i){
+        for(int j = 0; j < tamanho; ++j){
+            switch(matriz[i][j]){
+                case -1:
+                    printf(GRAY "█ " RESET);
+                    break;
+                case -2:
+                    printf(GREEN "🬀 " RESET);
+                    break;
+                case -3:
+                    printf(RED "🬀 " RESET);
+                    break;
+                case -4:
+                    printf(YELLOW "X " RESET);
+                    break;
+                default:
+                    printf("  ");
+                    break;
+            }
+        }
+        printf("\n");
+    }
+}
+
 bool mostrar_labirinto_como_caracteres(char* nome_arquivo, int** matriz, unsigned tamanho){
     FILE* file = fopen(nome_arquivo, "w");
     if(!file) return false;
@@ -190,6 +312,7 @@ bool mostrar_labirinto_como_caracteres(char* nome_arquivo, int** matriz, unsigne
     }
 
     fclose(file);
+
     return true;
 }
 
@@ -206,14 +329,25 @@ bool mostrar_labirinto_como_numeros(char* nome_arquivo, int** matriz, unsigned t
         fprintf(file, "\n\n");
     }
 
+    fclose(file);
+
     return true;
+}
+
+unsigned tamanho_caminho(int** matriz, unsigned tamanho){
+    int contagem = 0;
+    for(int i = 0; i < tamanho; ++i)
+        for(int j = 0; j < tamanho; ++j)
+            if(matriz[i][j] == -4)
+                contagem++;
+    return contagem;
 }
 
 unsigned verificar_labirinto(char* nome_arquivo){
 
     unsigned tamanho = 0;
 
-    FILE* file = fopen(nome_arquivo, "r"); // G: Isso gerou uma repetição dessa parte especifica..
+    FILE* file = fopen(nome_arquivo, "r");
     if(file == NULL){
         return 0;
     }
