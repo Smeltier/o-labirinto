@@ -106,34 +106,6 @@ void desalocar_matriz(int** matriz, unsigned n){
     free(matriz);
 }
 
-void marcar_caminho(int** matriz, unsigned tamanho, pilha_encadeada* caminho){
-    pilha_encadeada* pilha_auxiliar = pe_inicializar();
-
-    while(!pe_vazia(caminho)){
-        Par* topo = pe_topo(caminho);
-
-        int i = par_primeiro(topo),
-            j = par_segundo(topo);
-
-        pe_inserir(pilha_auxiliar, i, j);
-        pe_remover(caminho);
-
-        matriz[i][j] = -4;
-    }
-
-    while(!pe_vazia(pilha_auxiliar)){
-        Par* topo = pe_topo(pilha_auxiliar);
-
-        int i = par_primeiro(topo),
-            j = par_segundo(topo);
-
-        pe_inserir(caminho, i, j);
-        pe_remover(pilha_auxiliar);
-    }
-
-    pe_liberar(&pilha_auxiliar);
-}
-
 Par* encontrar_entrada(int** matriz, unsigned tamanho){
     int x_entrada,
         y_entrada;
@@ -228,6 +200,34 @@ bool extrair_caminho(int** matriz, unsigned tamanho, Par* entrada, Par* saida, p
     return true;
 }
 
+void marcar_caminho(int** matriz, unsigned tamanho, pilha_encadeada* caminho){
+    pilha_encadeada* pilha_auxiliar = pe_inicializar();
+
+    while(!pe_vazia(caminho)){
+        Par* topo = pe_topo(caminho);
+
+        int i = par_primeiro(topo),
+            j = par_segundo(topo);
+
+        pe_inserir(pilha_auxiliar, i, j);
+        pe_remover(caminho);
+
+        matriz[i][j] = -4;
+    }
+
+    while(!pe_vazia(pilha_auxiliar)){
+        Par* topo = pe_topo(pilha_auxiliar);
+
+        int i = par_primeiro(topo),
+            j = par_segundo(topo);
+
+        pe_inserir(caminho, i, j);
+        pe_remover(pilha_auxiliar);
+    }
+
+    pe_liberar(&pilha_auxiliar);
+}
+
 bool mostrar_animacao(int** matriz, unsigned tamanho, pilha_encadeada* caminho){
     int** animacao = alocar_matriz(tamanho);
     if(!animacao)
@@ -262,19 +262,19 @@ void mostrar_labirinto_estilizado(int** matriz, unsigned tamanho){
         for(int j = 0; j < tamanho; ++j){
             switch(matriz[i][j]){
                 case -1:
-                    printf(GRAY "█ " RESET);
+                    printf(PAREDE_GRAY);
                     break;
                 case -2:
-                    printf(GREEN "🬀 " RESET);
+                    printf(INICIO_GREEN);
                     break;
                 case -3:
-                    printf(RED "🬀 " RESET);
+                    printf(FIM_RED);
                     break;
                 case -4:
-                    printf(YELLOW "X " RESET);
+                    printf(CAMINHO_YELL);
                     break;
                 default:
-                    printf("  ");
+                    printf(VAZIO);
                     break;
             }
         }

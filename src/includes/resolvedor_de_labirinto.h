@@ -17,6 +17,13 @@
     #define CLEAR_COMMAND "clear"
 #endif
 
+#define BLOCO "███" 
+#define VAZIO "   "
+#define INICIO_GREEN GREEN BLOCO RESET
+#define FIM_RED      RED BLOCO RESET
+#define CAMINHO_YELL YELLOW " ● " RESET
+#define PAREDE_GRAY  GRAY BLOCO RESET
+
 bool ajustar_matriz(char* nome_arquivo, int** matriz, unsigned tamanho);
 
 void anotar_labirinto(int** matriz, unsigned tamanho, Par* entrada, Par* saida);
