@@ -74,7 +74,6 @@ int main(int argc, char const *argv[]){
 
     anotar_labirinto(matriz, tamanho_labirinto, entrada, saida);
 
-
     printf("\n\n");
 
     printf("Caminhos presentes no labirinto: \n\n");

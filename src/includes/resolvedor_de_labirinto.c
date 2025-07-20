@@ -167,7 +167,7 @@ bool extrair_caminho(int** matriz, unsigned tamanho, Par* entrada, Par* saida, p
         x_saida = par_primeiro(saida),
         y_saida = par_segundo(saida);
 
-    if(matriz[x_saida][y_saida] == -1 || matriz[x_saida][y_saida] == 0)
+    if(matriz[x_saida][y_saida] == -1 || matriz[x_saida][y_saida] == 0 || matriz[x_entrada][y_entrada] == -1)
         return false;
     
     pe_inserir(caminho, x_saida, y_saida);
@@ -186,15 +186,21 @@ bool extrair_caminho(int** matriz, unsigned tamanho, Par* entrada, Par* saida, p
 
         int passo_atual = matriz[i][j];
 
+        bool achou_proximo = false;
+
         for(int d = 0; d < 4; ++d){
             int x = i + dx[d],
                 y = j + dy[d];
 
             if(x >= 0 && x < tamanho && y >= 0 && y < tamanho && matriz[x][y] == passo_atual - 1){
                 pe_inserir(caminho, x, y);
+                achou_proximo = true;
                 break;
             }
         }
+
+        if(!achou_proximo)
+            return false;
     }
 
     return true;
