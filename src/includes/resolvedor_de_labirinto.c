@@ -256,7 +256,7 @@ bool mostrar_animacao(int** matriz, unsigned tamanho, pilha_encadeada* caminho){
 
         system(CLEAR_COMMAND);
         mostrar_labirinto_estilizado(animacao, tamanho);
-        SLEEP(200);
+        SLEEP(350);
     }
     
     desalocar_matriz(animacao, tamanho);
