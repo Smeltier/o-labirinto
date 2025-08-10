@@ -6,6 +6,8 @@
 #include <stdbool.h>
 #include "includes/resolvedor_de_labirinto.h"
 
+// G: No windows recomendo forçar o uso do UTF-8 no terminal (pode usar 'chcp 65001', por exemplo).
+
 int main(int argc, char const *argv[]){
 
     // Etapa 2.
